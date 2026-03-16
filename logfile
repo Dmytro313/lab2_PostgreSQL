@@ -1,0 +1,4 @@
+2026-03-16 16:06:38.403 EET [32493] LOG:  redirecting log output to logging collector process
+2026-03-16 16:06:38.403 EET [32493] HINT:  Future log output will appear in directory "log".
+2026-03-16 16:11:35.092 EET [33587] LOG:  redirecting log output to logging collector process
+2026-03-16 16:11:35.092 EET [33587] HINT:  Future log output will appear in directory "log".

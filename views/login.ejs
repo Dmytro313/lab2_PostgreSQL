@@ -1,0 +1,10 @@
+<!DOCTYPE html><html><body>
+  <h2>Вхід</h2>
+  <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+  <form action="/auth/login" method="POST">
+    <input type="email" name="email" placeholder="Email" required><br><br>
+    <input type="password" name="password" placeholder="Пароль" required><br><br>
+    <button type="submit">Увійти</button>
+  </form>
+  <a href="/auth/register">Зареєструватись</a>
+</body></html>
