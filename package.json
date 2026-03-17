@@ -1,4 +1,11 @@
 {
+  "name": "express-auth-app",
+  "version": "1.0.0",
+  "description": "Практична робота з авторизації",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "connect-pg-simple": "^10.0.0",
