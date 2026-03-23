@@ -6,12 +6,14 @@ require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
+const notesRouter = require("./routes/notes");
 
 const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 app.use(session({
   store: new pgSession({
@@ -28,7 +30,7 @@ app.use(function (req, res, next) {
   res.locals.sessionUser = req.session.username || null;
   next();
 });
-
+app.use("/notes", notesRouter);
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 

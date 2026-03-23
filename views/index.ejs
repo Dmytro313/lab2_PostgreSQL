@@ -1,6 +1,23 @@
-<!DOCTYPE html><html><body>
-  <h1>Привіт, <%= username %>!</h1>
-  <form action="/auth/logout" method="POST">
-    <button type="submit">Вийти</button>
-  </form>
-</body></html>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Головне меню</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="card">
+
+    <a href="/notes" class="btn-primary">Мої нотатки</a>
+    
+    <h2>Головне меню</h2>
+    <p>Вітаємо, <strong><%= username %></strong>! Ви успішно увійшли в систему.</p>
+    
+    <br>
+    
+    <form action="/auth/logout" method="POST">
+      <button type="submit" class="btn-logout">Вийти з акаунта</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+* {
+  margin: 5;
+  padding: 10;
+  box-sizing: border-box;
+}
+main{
+  color: #cccccc;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 95vh;
+}
+
+a {
+  color: #4da6ff;
+  text-decoration: none;
+  margin-top: 15px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.card {
+  background-color: #1e1e1e;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  width: 350px;
+  text-align: center;
+}
+
+.card h2 {
+  margin-bottom: 25px;
+}
+
+.card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border: 1px solid #3d3d3d;
+  border-radius: 8px;
+  outline: none;
+}
+
+.card input:focus {
+  border-color: #4da6ff;
+}
+
+.card button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4da6ff;
+  color: #121212;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.card button:hover {
+  background-color: #3388ff;
+}
+
+
+.card p {
+  color: #cccccc;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+
+.card strong {
+  color: #ffffff;
+  font-size: 1.1em;
+}
+
+
+.card .btn-logout {
+  background-color: #ff4d4d;
+  color: #ffffff;
+}
+
+
+.card .btn-logout:hover {
+  background-color: #e60000;
+}
+
+.btn-primary {
+  display: inline-block;
+  background-color: #4da6ff;
+  color: #121212;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

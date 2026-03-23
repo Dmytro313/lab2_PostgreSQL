@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Мої нотатки</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="card" style="width: 500px;">
+        <h2>Ваші нотатки</h2>
+        
+        <a href="/notes/new" class="btn-primary">+ Створити нову</a>
+        <br><br>
+
+        <% if (notes.length === 0) { %>
+            <p>У вас ще немає жодної нотатки.</p>
+        <% } else { %>
+            <div class="notes-list">
+                <% notes.forEach(note => { %>
+                    <div class="note-item" style="border-bottom: 1px solid #3d3d3d; padding: 10px 0; text-align: left;">
+                        <h3><%= note.title %></h3>
+                        <p><%= note.content %></p>
+                        <small><%= note.created_at.toLocaleDateString() %></small>
+                        <div style="margin-top: 5px;">
+                            <a href="/notes/<%= note.id %>/edit" style="font-size: 0.8em;">Редагувати</a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <br>
+        <a href="/" style="font-size: 0.9em; color: #888;">← Назад в меню</a>
+    </div>
+</body>
+</html>

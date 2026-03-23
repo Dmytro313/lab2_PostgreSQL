@@ -1,4 +1,9 @@
 <!DOCTYPE html><html><body>
+  <head>
+    <div class="card">
+    <title>Вхід</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
   <h2>Реєстрація</h2>
   <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
   <form action="/auth/register" method="POST">
