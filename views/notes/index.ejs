@@ -5,30 +5,77 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="card" style="width: 500px;">
+    <div class="card" style="width: 800px; max-width: 90vw;">
         <h2>Ваші нотатки</h2>
         
-        <a href="/notes/new" class="btn-primary">+ Створити нову</a>
-        <br><br>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <a href="/notes/new" class="btn-primary">+ Створити нову</a>
+            <a href="/notes/export.csv?page=1<%= queryString %>" class="btn-primary" style="background-color: #28a745; color: white;">⬇ Export CSV</a>
+        </div>
+
+        <form action="/notes" method="GET" style="background: #2d2d2d; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center;">
+            
+            <input type="text" name="search" placeholder="Пошук..." value="<%= filters.search %>" style="flex: 1; min-width: 150px; margin: 0;">
+            
+            <select name="period" style="padding: 10px; border-radius: 8px; background: #1e1e1e; color: white; border: 1px solid #3d3d3d;">
+                <option value="all" <%= filters.period === 'all' ? 'selected' : '' %>>За весь час</option>
+                <option value="7d" <%= filters.period === '7d' ? 'selected' : '' %>>Останні 7 днів</option>
+                <option value="30d" <%= filters.period === '30d' ? 'selected' : '' %>>Останні 30 днів</option>
+            </select>
+
+            <select name="sort" style="padding: 10px; border-radius: 8px; background: #1e1e1e; color: white; border: 1px solid #3d3d3d;">
+                <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Спочатку нові</option>
+                <option value="oldest" <%= filters.sort === 'oldest' ? 'selected' : '' %>>Спочатку старі</option>
+            </select>
+
+            <select name="limit" style="padding: 10px; border-radius: 8px; background: #1e1e1e; color: white; border: 1px solid #3d3d3d;">
+                <option value="5" <%= filters.limit === 5 ? 'selected' : '' %>>5 на сторінці</option>
+                <option value="10" <%= filters.limit === 10 ? 'selected' : '' %>>10 на сторінці</option>
+                <option value="20" <%= filters.limit === 20 ? 'selected' : '' %>>20 на сторінці</option>
+                <option value="50" <%= filters.limit === 50 ? 'selected' : '' %>>50 на сторінці</option>
+            </select>
+
+            <button type="submit" style="width: auto; margin: 0; padding: 10px 20px;">Apply</button>
+            <a href="/notes" style="color: #ff4d4d; text-decoration: none; padding: 10px;">Reset</a>
+        </form>
 
         <% if (notes.length === 0) { %>
-            <p>У вас ще немає жодної нотатки.</p>
+            <p>Нотаток не знайдено.</p>
         <% } else { %>
             <div class="notes-list">
                 <% notes.forEach(note => { %>
-                    <div class="note-item" style="border-bottom: 1px solid #3d3d3d; padding: 10px 0; text-align: left;">
+                    <div class="note-item" style="border-bottom: 1px solid #3d3d3d; padding: 15px 0; text-align: left;">
                         <h3><%= note.title %></h3>
-                        <p><%= note.content %></p>
-                        <small><%= note.created_at.toLocaleDateString() %></small>
-                        <div style="margin-top: 5px;">
-                            <a href="/notes/<%= note.id %>/edit" style="font-size: 0.8em;">Редагувати</a>
+                        <p style="color: #bbb;"><%= note.content %></p>
+                        <small style="color: #666;"><%= new Date(note.created_at).toLocaleString('uk-UA') %></small>
+                        <div style="margin-top: 10px;">
+                            <a href="/notes/<%= note.id %>/edit" style="color: #4da6ff; font-size: 0.9em;">✏️ Редагувати</a>
                         </div>
                     </div>
                 <% }) %>
             </div>
         <% } %>
 
-        <br>
+        <% if (totalPages > 1) { %>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; background: #2d2d2d; padding: 10px; border-radius: 8px;">
+                
+                <% if (currentPage > 1) { %>
+                    <a href="/notes?page=<%= currentPage - 1 %><%= queryString %>" class="btn-primary" style="margin: 0; padding: 8px 15px;">⬅ Prev</a>
+                <% } else { %>
+                    <span style="opacity: 0.5; padding: 8px 15px; background: #333; border-radius: 8px; color: #888;">⬅ Prev</span>
+                <% } %>
+
+                <span style="font-weight: bold;">Page <%= currentPage %> of <%= totalPages %></span>
+
+                <% if (currentPage < totalPages) { %>
+                    <a href="/notes?page=<%= currentPage + 1 %><%= queryString %>" class="btn-primary" style="margin: 0; padding: 8px 15px;">Next ➡</a>
+                <% } else { %>
+                    <span style="opacity: 0.5; padding: 8px 15px; background: #333; border-radius: 8px; color: #888;">Next ➡</span>
+                <% } %>
+            </div>
+        <% } %>
+
+        <br><br>
         <a href="/" style="font-size: 0.9em; color: #888;">← Назад в меню</a>
     </div>
 </body>
