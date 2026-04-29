@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Мій профіль</title>
+    <link rel="stylesheet" href="/auth.css">
+    <style>
+        .avatar-preview { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px auto; display: block; border: 3px solid #4da6ff; background-color: #2d2d2d; }
+    </style>
+</head>
+<body style="color: white;">
+    <div class="auth-card" style="text-align: center;">
+        <h2 style="margin-top: 0; color: white;">Мій профіль</h2>
+
+        <% if (error) { %>
+            <div style="background: #ff4d4d; color: white; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (user.avatar) { %>
+            <img src="<%= user.avatar %>" alt="Аватар" class="avatar-preview">
+            
+            <form action="/profile/avatar/delete" method="POST" style="margin-bottom: 20px;">
+                <button type="submit" style="background-color: #b30000; color: white; padding: 8px 15px; border-radius: 6px; border: none; cursor: pointer;">🗑 Видалити аватар</button>
+            </form>
+        <% } else { %>
+            <img src="https://via.placeholder.com/150/2d2d2d/ffffff?text=No+Avatar" alt="Немає аватара" class="avatar-preview">
+        <% } %>
+
+        <div style="margin-bottom: 25px;">
+            <p style="margin: 5px 0;"><b>Ім'я:</b> <%= user.username %></p>
+            <p style="margin: 5px 0; color: #bbb;"><b>Email:</b> <%= user.email %></p>
+        </div>
+
+        <form action="/profile/avatar" method="POST" enctype="multipart/form-data" style="background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: left;">
+            <label style="display: block; margin-bottom: 10px; font-weight: bold; color: white;">Оновити аватар:</label>
+            <input type="file" name="avatar" accept=".jpg, .jpeg, .png, .webp" required style="width: 100%; margin-bottom: 15px; color: #fff;">
+            <button type="submit" style="background-color: #4da6ff; color: #121212; width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Завантажити</button>
+        </form>
+
+        <a href="/" style="display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none;">← Назад в меню</a>
+    </div>
+</body>
+</html>

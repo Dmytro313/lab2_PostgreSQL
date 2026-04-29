@@ -3,75 +3,168 @@
 <head>
     <title>Мої нотатки</title>
     <link rel="stylesheet" href="/style.css">
+    <style>
+        .tags-filter-container {
+            background: #2d2d2d;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .tags-filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 6px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .tag-filter-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #1e1e1e;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .tag-filter-checkbox:hover {
+            border-color: #4da6ff;
+        }
+        .tag-filter-checkbox input[type="checkbox"] {
+            margin-right: 4px;
+            cursor: pointer;
+            accent-color: #4da6ff;
+        }
+        .tag-filter-checkbox label {
+            cursor: pointer;
+            margin: 0;
+            color: #ccc;
+            flex: 1;
+        }
+        .selected-tag-filter {
+            background: #4da6ff;
+            color: #1e1e1e;
+        }
+        .tag-badge {
+            background: #4da6ff;
+            color: #1e1e1e;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-right: 3px;
+            display: inline-block;
+        }
+    </style>
 </head>
-<body>
-    <div class="card" style="width: 800px; max-width: 90vw; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        <h2>Ваші нотатки</h2>
+<body style="color: white; background-color: #121212;">
+    <div class="card" style="width: 950px; max-width: 95vw; margin: 20px auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
         
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <a href="/notes/new" class="btn-primary" style="background-color: #0056b3; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">+ Створити нову</a>
-            
-            <a href="/notes/stats" class="btn-primary" style="background-color: #8a2be2; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">Аналітика</a>
-            
-            <a href="/notes/export.csv?page=1<%= queryString %>" class="btn-primary" style="background-color: #28a745; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">⬇ Export CSV</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+            <div style="display: flex; gap: 20px;">
+                <a href="/" style="color: #888; text-decoration: none; font-weight: bold;">🏠 Головне меню</a>
+                <a href="/profile" style="color: #4da6ff; text-decoration: none; font-weight: bold;">👤 Мій профіль</a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <% if (typeof user !== 'undefined') { %>
+                    <span style="font-weight: bold;"><%= user.username %></span>
+                    <% if (user.avatar) { %>
+                        <img src="<%= user.avatar %>" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #4da6ff;">
+                    <% } else { %>
+                        <img src="https://via.placeholder.com/35/2d2d2d/ffffff?text=U" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #4da6ff;">
+                    <% } %>
+                <% } %>
+            </div>
         </div>
 
-        <form action="/notes" method="GET" style="background: #2d2d2d; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center;">
+        <h2 style="text-align: center;">Ваші нотатки</h2>
+        
+        <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+            <a href="/notes/new" style="flex: 1; background-color: #0056b3; color: white; padding: 12px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: bold;">+ Створити</a>
             
-            <input type="text" name="search" placeholder="Пошук..." value="<%= filters.search %>" style="flex: 1; min-width: 150px; margin: 0; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: white;">
+            <a href="/notes/import" style="flex: 1; background-color: #ff9900; color: #121212; padding: 12px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: bold;">⬆ Імпорт</a>
+            
+            <a href="/notes/stats" style="flex: 1; background-color: #8a2be2; color: white; padding: 12px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: bold;">📊 Аналітика</a>
+            
+            <a href="/notes/export.csv?page=1<%= typeof queryString !== 'undefined' ? queryString : '' %>" style="flex: 1; background-color: #28a745; color: white; padding: 12px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: bold;">⬇ Export CSV</a>
+        </div>
+
+        <form action="/notes" method="GET" style="background: #2d2d2d; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start;">
+            <input type="text" name="search" placeholder="Пошук..." value="<%= typeof filters !== 'undefined' ? filters.search : '' %>" style="flex: 1; min-width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: white;">
             
             <select name="period" style="padding: 10px; border-radius: 6px; background: #1e1e1e; color: white; border: 1px solid #333;">
-                <option value="all" <%= filters.period === 'all' ? 'selected' : '' %>>За весь час</option>
-                <option value="7d" <%= filters.period === '7d' ? 'selected' : '' %>>Останні 7 днів</option>
-                <option value="30d" <%= filters.period === '30d' ? 'selected' : '' %>>Останні 30 днів</option>
+                <option value="all" <%= typeof filters !== 'undefined' && filters.period === 'all' ? 'selected' : '' %>>За весь час</option>
+                <option value="7d" <%= typeof filters !== 'undefined' && filters.period === '7d' ? 'selected' : '' %>>Останні 7 днів</option>
+                <option value="30d" <%= typeof filters !== 'undefined' && filters.period === '30d' ? 'selected' : '' %>>Останні 30 днів</option>
             </select>
 
             <select name="sort" style="padding: 10px; border-radius: 6px; background: #1e1e1e; color: white; border: 1px solid #333;">
-                <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Спочатку нові</option>
-                <option value="oldest" <%= filters.sort === 'oldest' ? 'selected' : '' %>>Спочатку старі</option>
+                <option value="newest" <%= typeof filters !== 'undefined' && filters.sort === 'newest' ? 'selected' : '' %>>Спочатку нові</option>
+                <option value="oldest" <%= typeof filters !== 'undefined' && filters.sort === 'oldest' ? 'selected' : '' %>>Спочатку старі</option>
             </select>
 
             <select name="limit" style="padding: 10px; border-radius: 6px; background: #1e1e1e; color: white; border: 1px solid #333;">
-                <option value="5" <%= filters.limit === 5 ? 'selected' : '' %>>5 на сторінці</option>
-                <option value="10" <%= filters.limit === 10 ? 'selected' : '' %>>10 на сторінці</option>
-                <option value="20" <%= filters.limit === 20 ? 'selected' : '' %>>20 на сторінці</option>
-                <option value="50" <%= filters.limit === 50 ? 'selected' : '' %>>50 на сторінці</option>
+                <option value="5" <%= typeof filters !== 'undefined' && filters.limit === 5 ? 'selected' : '' %>>5 на стор.</option>
+                <option value="10" <%= typeof filters !== 'undefined' && filters.limit === 10 ? 'selected' : '' %>>10 на стор.</option>
+                <option value="20" <%= typeof filters !== 'undefined' && filters.limit === 20 ? 'selected' : '' %>>20 на стор.</option>
             </select>
 
-            <button type="submit" style="width: auto; margin: 0; padding: 10px 20px; background-color: #4da6ff; color: #121212; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Apply</button>
+            <button type="submit" style="padding: 10px 20px; background-color: #4da6ff; color: #121212; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Apply</button>
             <a href="/notes" style="color: #ff4d4d; text-decoration: none; padding: 10px;">Reset</a>
+            
+            <!-- Мультивибір тегів -->
+            <% if (typeof allTags !== 'undefined' && allTags.length > 0) { %>
+                <div style="width: 100%; order: 10;">
+                    <div class="tags-filter-container">
+                        <p style="margin: 0 0 8px 0; color: #4da6ff; font-weight: bold; font-size: 0.9em;">📌 Фільтр по тегам:</p>
+                        <div class="tags-filter-grid">
+                            <% allTags.forEach(tag => { 
+                                const isSelected = typeof filters !== 'undefined' && filters.tags && (Array.isArray(filters.tags) ? filters.tags.includes(tag.name) : filters.tags === tag.name);
+                            %>
+                                <div class="tag-filter-checkbox <%= isSelected ? 'selected-tag-filter' : '' %>">
+                                    <input type="checkbox" id="tag_<%= tag.name %>" name="tags" value="<%= tag.name %>" 
+                                        <%= isSelected ? 'checked' : '' %>>
+                                    <label for="tag_<%= tag.name %>">#<%= tag.name %></label>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
         </form>
 
-        <% if (notes.length === 0) { %>
-            <p>Нотаток не знайдено.</p>
+        <% if (typeof notes === 'undefined' || notes.length === 0) { %>
+            <p style="text-align: center; color: #888;">Нотаток не знайдено.</p>
         <% } else { %>
-            <div class="notes-list" style="max-height: 45vh; overflow-y: auto; padding-right: 10px; border: 1px solid #3d3d3d; border-radius: 8px; padding: 15px; background: #222;">
+            <div class="notes-list" style="max-height: 50vh; overflow-y: auto; padding-right: 10px;">
                 <% notes.forEach(note => { %>
-                    <div class="note-item" style="border-bottom: 1px solid #3d3d3d; padding: 15px 0; text-align: left;">
-                        <h3 style="margin: 0 0 10px 0;"><%= note.title %></h3>
+                    <div class="note-item" style="border: 1px solid #3d3d3d; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #222;">
+                        <h3 style="margin: 0 0 10px 0; color: #4da6ff;"><%= note.title %></h3>
                         <p style="color: #bbb; margin: 0 0 10px 0;"><%= note.content %></p>
                         
                         <% if (note.tags_list) { %>
                             <div style="margin-bottom: 10px;">
                                 <% note.tags_list.split(', ').forEach(tag => { %>
-                                    <a href="/notes?tag=<%= tag %>" style="display: inline-block; background: #4da6ff; color: #1e1e1e; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; margin-right: 5px; text-decoration: none;">#<%= tag %></a>
+                                    <a href="/notes?tags=<%= tag %>" style="display: inline-block; background: #333; color: #4da6ff; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; margin-right: 5px; text-decoration: none;">#<%= tag %></a>
                                 <% }) %>
                             </div>
                         <% } %>
-                        <small style="color: #666;"><%= new Date(note.created_at).toLocaleString('uk-UA') %></small>
-                        <div style="margin-top: 10px;">
-                            <a href="/notes/<%= note.id %>/edit" style="color: #4da6ff; font-size: 0.9em; text-decoration: none;"> Редагувати</a>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                            <small style="color: #666;"><%= new Date(note.created_at).toLocaleString('uk-UA') %></small>
+                            <a href="/notes/<%= note.id %>/edit" style="color: #ff9900; font-size: 0.9em; text-decoration: none;">⚙ Редагувати</a>
                         </div>
                     </div>
                 <% }) %>
             </div>
         <% } %>
 
-        <% if (totalPages > 1) { %>
+        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; background: #2d2d2d; padding: 10px; border-radius: 8px;">
                 
                 <% if (currentPage > 1) { %>
-                    <a href="/notes?page=<%= currentPage - 1 %><%= queryString %>" class="btn-primary" style="margin: 0; padding: 8px 15px; background: #4da6ff; color: #121212; border-radius: 6px; text-decoration: none;">⬅ Prev</a>
+                    <a href="/notes?page=<%= currentPage - 1 %><%= typeof queryString !== 'undefined' ? queryString : '' %>" style="margin: 0; padding: 8px 15px; background: #4da6ff; color: #121212; border-radius: 6px; text-decoration: none; font-weight: bold;">⬅ Prev</a>
                 <% } else { %>
                     <span style="opacity: 0.5; padding: 8px 15px; background: #333; border-radius: 6px; color: #888;">⬅ Prev</span>
                 <% } %>
@@ -79,15 +172,27 @@
                 <span style="font-weight: bold;">Page <%= currentPage %> of <%= totalPages %></span>
 
                 <% if (currentPage < totalPages) { %>
-                    <a href="/notes?page=<%= currentPage + 1 %><%= queryString %>" class="btn-primary" style="margin: 0; padding: 8px 15px; background: #4da6ff; color: #121212; border-radius: 6px; text-decoration: none;">Next ➡</a>
+                    <a href="/notes?page=<%= currentPage + 1 %><%= typeof queryString !== 'undefined' ? queryString : '' %>" style="margin: 0; padding: 8px 15px; background: #4da6ff; color: #121212; border-radius: 6px; text-decoration: none; font-weight: bold;">Next ➡</a>
                 <% } else { %>
                     <span style="opacity: 0.5; padding: 8px 15px; background: #333; border-radius: 6px; color: #888;">Next ➡</span>
                 <% } %>
             </div>
         <% } %>
 
-        <br><br>
-        <a href="/" style="font-size: 0.9em; color: #888; text-decoration: none;">← Назад в меню</a>
     </div>
+
+    <script>
+        // Додаємо обробник для зміни стилів при виборі тегів
+        document.querySelectorAll('input[name="tags"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const label = this.parentElement;
+                if (this.checked) {
+                    label.classList.add('selected-tag-filter');
+                } else {
+                    label.classList.remove('selected-tag-filter');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

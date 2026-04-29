@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Імпорт нотаток</title>
+    <link rel="stylesheet" href="/auth.css">
+    <style>
+        .import-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        .import-box {
+            flex: 1;
+            min-width: 250px;
+        }
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            background: #2d2d2d;
+            border: 2px dashed #4da6ff;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-input-label:hover {
+            background: #333;
+            border-color: #66b3ff;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .success-message {
+            background: #0d5f0d;
+            color: #90EE90;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+        }
+        .error-message {
+            background: #4a0a0a;
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #b30000;
+        }
+        .info-box {
+            background: #2d2d2d;
+            border-left: 4px solid #4da6ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #4da6ff;
+        }
+        .info-box ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin-bottom: 8px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card" style="max-width: 800px;">
+        <h2 style="margin-top: 0;">📥 Імпорт нотаток</h2>
+        
+        <% if (typeof success !== 'undefined' && success) { %>
+            <div class="success-message">
+                ✅ <%= success %>
+            </div>
+        <% } %>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-message">
+                ❌ <%= error %>
+            </div>
+        <% } %>
+
+        <div class="import-container">
+            <!-- Форма для завантаження -->
+            <div class="import-box">
+                <form action="/notes/import" method="POST" enctype="multipart/form-data">
+                    <label for="importFile" class="file-input-label">
+                        <div style="font-size: 40px; margin-bottom: 10px;">📄</div>
+                        <div style="font-weight: bold; color: #4da6ff;">Натисніть або перетягніть файл</div>
+                        <div style="font-size: 0.9em; color: #888; margin-top: 5px;">CSV або JSON формат</div>
+                    </label>
+                    <input type="file" id="importFile" name="importFile" accept=".csv,.json" required>
+                    
+                    <div style="margin-top: 15px;">
+                        <button type="submit" style="width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1em;">
+                            ⬆ Імпортувати
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Інформація про формати -->
+            <div class="import-box">
+                <div class="info-box">
+                    <h3>📋 Формат CSV</h3>
+                    <p style="margin: 0 0 10px 0; color: #bbb;">Перший рядок мають бути заголовки:</p>
+                    <code style="background: #1e1e1e; padding: 8px; border-radius: 4px; display: block; margin-bottom: 10px; color: #90EE90; overflow-x: auto;">
+                        title,content,tags
+                    </code>
+                    <p style="margin: 0; color: #888; font-size: 0.9em;">
+                        Теги можна розділяти комами або крапками з комами
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>📋 Формат JSON</h3>
+                    <p style="margin: 0 0 10px 0; color: #bbb;">Масив об'єктів:</p>
+                    <code style="background: #1e1e1e; padding: 8px; border-radius: 4px; display: block; color: #90EE90; overflow-x: auto; font-size: 0.85em;">
+                        [<br>
+                        &nbsp;&nbsp;{ "title": "...", "body": "...", "tags": ["tag1", "tag2"] }<br>
+                        ]
+                    </code>
+                </div>
+
+                <div class="info-box" style="border-left-color: #ff9900;">
+                    <h3 style="color: #ff9900;">ℹ️ Обмеження</h3>
+                    <ol>
+                        <li>Максимум 200 записів за раз</li>
+                        <li>Заголовок обов'язковий</li>
+                        <li>Дублікати будуть пропущені</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="/notes" style="display: inline-block; background: #4da6ff; color: #121212; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">← Назад до нотаток</a>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('importFile');
+        const label = document.querySelector('.file-input-label');
+
+        // Обробка перетягування
+        label.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            label.style.background = '#333';
+            label.style.borderColor = '#66b3ff';
+        });
+
+        label.addEventListener('dragleave', () => {
+            label.style.background = '#2d2d2d';
+            label.style.borderColor = '#4da6ff';
+        });
+
+        label.addEventListener('drop', (e) => {
+            e.preventDefault();
+            label.style.background = '#2d2d2d';
+            label.style.borderColor = '#4da6ff';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+            }
+        });
+
+        // При клику на лейбл
+        label.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // При виборі файлу оновлюємо текст
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                const fileSize = (e.target.files[0].size / 1024).toFixed(2);
+                label.innerHTML = `
+                    <div style="font-size: 40px; margin-bottom: 10px;">✅</div>
+                    <div style="font-weight: bold; color: #4da6ff;">${fileName}</div>
+                    <div style="font-size: 0.9em; color: #888; margin-top: 5px;">${fileSize} KB</div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
+
+        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; background: #2d2d2d; padding: 10px; border-radius: 8px;">
+                <% if (currentPage > 1) { %>
+                    <a href="/notes?page=<%= currentPage - 1 %><%= typeof queryString !== 'undefined' ? queryString : '' %>" style="padding: 8px 15px; background: #4da6ff; color: #121212; border-radius: 6px; text-decoration: none; font-weight: bold;">⬅ Prev</a>
+                <% } else { %>
+                    <span style="opacity: 0.3; padding: 8px 15px; background: #333; border-radius: 6px;">⬅ Prev</span>
+                <% } %>
+
+                <span>Сторінка <b><%= currentPage %></b> з <b><%= totalPages %></b></span>
+
+                <% if (currentPage < totalPages) { %>
+                    <a href="/notes?page=<%= currentPage + 1 %><%= typeof queryString !== 'undefined' ? queryString : '' %>" style="padding: 8px 15px; background: #4da6ff; color: #121212; border-radius: 6px; text-decoration: none; font-weight: bold;">Next ➡</a>
+                <% } else { %>
+                    <span style="opacity: 0.3; padding: 8px 15px; background: #333; border-radius: 6px;">Next ➡</span>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

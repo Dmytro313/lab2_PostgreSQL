@@ -4,23 +4,14 @@
     <title>Головне меню</title>
     <link rel="stylesheet" href="/auth.css">
 </head>
-<body>
-
-    <div class="auth-card">
-        <h2>Головне меню</h2>
-        <p style="margin-bottom: 20px; color: #bbb; line-height: 1.5;">
-            Вітаємо, <b style="color: white;"><%= typeof username !== 'undefined' ? username : 'Користувачу' %></b>!<br>
-            Ви успішно увійшли в систему.
-        </p>
-        
-        <a href="/notes" style="display: block; background-color: #0056b3; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 10px; text-align: center;">
-            Мої нотатки
-        </a>
-        
-        <a href="/auth/logout" style="display: block; background-color: #b30000; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; text-align: center; box-sizing: border-box;">
-            Вийти з акаунта
-        </a>
+<body style="background-color: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+    <div class="auth-card" style="text-align: center; width: 400px; background: #1e1e1e; padding: 40px; border-radius: 15px;">
+        <h1 style="color: white;">Вітаємо, <%= username %>!</h1>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+            <a href="/notes" style="padding: 15px; background: #4da6ff; color: #121212; text-decoration: none; border-radius: 8px; font-weight: bold;">📝 Мої нотатки</a>
+            <a href="/profile" style="padding: 15px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">👤 Мій профіль</a>
+            <a href="/auth/logout" style="padding: 15px; background: #b30000; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">🚪 Вийти</a>
+        </div>
     </div>
-
 </body>
 </html>
