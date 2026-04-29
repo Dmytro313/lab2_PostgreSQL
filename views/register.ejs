@@ -1,17 +1,23 @@
-<!DOCTYPE html><html><body>
-  <head>
-    <div class="card">
-    <title>Вхід</title>
-    <link rel="stylesheet" href="/style.css">
-  </head>
-  <h2>Реєстрація</h2>
-  <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
-  <form action="/auth/register" method="POST">
-    <input type="text" name="username" placeholder="Ім'я" required><br><br>
-    <input type="email" name="email" placeholder="Email" required><br><br>
-    <input type="password" name="password" placeholder="Пароль" required><br><br>
-    <input type="password" name="confirmPassword" placeholder="Підтвердіть пароль" required><br><br>
-    <button type="submit">Зареєструватись</button>
-  </form>
-  <a href="/auth/login">Увійти</a>
-</body></html>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="/auth.css">
+</head>
+<body>
+    <div class="auth-card">
+        <h2>Реєстрація</h2>
+        <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+        <form action="/auth/register" method="POST">
+            <input type="text" name="username" placeholder="Ім'я" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <input type="password" name="confirmPassword" placeholder="Підтвердіть пароль" required>
+            <button type="submit">Зареєструватись</button>
+        </form>
+        <p style="margin-top: 15px; color: #bbb;">
+            Вже є акаунт? <a href="/auth/login">Увійти</a>
+        </p>
+    </div>
+</body>
+</html>

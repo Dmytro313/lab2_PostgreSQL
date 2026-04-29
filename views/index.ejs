@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <title>Головне меню</title>
-  <link rel="stylesheet" href="/style.css">
+    <title>Головне меню</title>
+    <link rel="stylesheet" href="/auth.css">
 </head>
 <body>
-  <div class="card">
 
-    <a href="/notes" class="btn-primary">Мої нотатки</a>
-    
-    <h2>Головне меню</h2>
-    <p>Вітаємо, <strong><%= username %></strong>! Ви успішно увійшли в систему.</p>
-    
-    <br>
-    
-    <form action="/auth/logout" method="POST">
-      <button type="submit" class="btn-logout">Вийти з акаунта</button>
-    </form>
-  </div>
+    <div class="auth-card">
+        <h2>Головне меню</h2>
+        <p style="margin-bottom: 20px; color: #bbb; line-height: 1.5;">
+            Вітаємо, <b style="color: white;"><%= typeof username !== 'undefined' ? username : 'Користувачу' %></b>!<br>
+            Ви успішно увійшли в систему.
+        </p>
+        
+        <a href="/notes" style="display: block; background-color: #0056b3; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 10px; text-align: center;">
+            Мої нотатки
+        </a>
+        
+        <a href="/auth/logout" style="display: block; background-color: #b30000; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; text-align: center; box-sizing: border-box;">
+            Вийти з акаунта
+        </a>
+    </div>
+
 </body>
 </html>

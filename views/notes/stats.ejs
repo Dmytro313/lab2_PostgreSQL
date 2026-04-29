@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Статистика нотаток</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .stat-box { background: #2d2d2d; padding: 20px; border-radius: 8px; margin-bottom: 15px; text-align: left; }
+        .stat-number { font-size: 24px; font-weight: bold; color: #4da6ff; }
+        .tag-badge { background: #4da6ff; color: #1e1e1e; padding: 5px 10px; border-radius: 15px; text-decoration: none; margin-right: 5px; font-size: 0.9em; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div class="card" style="width: 800px; max-width: 90vw; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <h2> Ваша аналітика</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="stat-box">
+                <div>Загальна кількість нотаток:</div>
+                <div class="stat-number"><%= total %></div>
+            </div>
+            
+            <div class="stat-box">
+                <div>Створено нещодавно:</div>
+                <div style="color: #bbb; margin-top: 5px;">За 7 днів: <span class="stat-number" style="font-size: 18px;"><%= days7 %></span></div>
+                <div style="color: #bbb;">За 30 днів: <span class="stat-number" style="font-size: 18px;"><%= days30 %></span></div>
+            </div>
+
+            <div class="stat-box">
+                <div>Нотаток без жодного тегу:</div>
+                <div class="stat-number"><%= noTags %></div>
+            </div>
+
+            <div class="stat-box">
+                <div>Середня довжина тексту:</div>
+                <div class="stat-number"><%= avgLength %> <span style="font-size: 14px; color: #bbb;">символів</span></div>
+            </div>
+        </div>
+
+        <div class="stat-box" style="margin-top: 15px;">
+            <div> Топ-5 популярних тегів:</div>
+            <div style="margin-top: 10px;">
+                <% if (topTags.length > 0) { %>
+                    <% topTags.forEach(tag => { %>
+                        <a href="/notes?tag=<%= tag.name %>" class="tag-badge"><%= tag.name %> (<%= tag.uses_count %>)</a>
+                    <% }) %>
+                <% } else { %>
+                    <span style="color: #bbb;">Ви ще не використовуєте теги.</span>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div> Найдовший заголовок:</div>
+            <div style="color: #bbb; margin-top: 5px; font-style: italic;">"<%= longestTitle %>"</div>
+        </div>
+
+        <br>
+        <a href="/notes" style="color: #888;">← Назад до списку</a>
+    </div>
+</body>
+</html>

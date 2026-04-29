@@ -1,15 +1,21 @@
-<!DOCTYPE html><html><body>
-  <head>
-    <div class="card">
+<!DOCTYPE html>
+<html lang="uk">
+<head>
     <title>Вхід</title>
-    <link rel="stylesheet" href="/style.css">
-  </head>
-  <h2>Вхід</h2>
-  <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
-  <form action="/auth/login" method="POST">
-    <input type="email" name="email" placeholder="Email" required><br><br>
-    <input type="password" name="password" placeholder="Пароль" required><br><br>
-    <button type="submit">Увійти</button>
-  </form>
-  <a href="/auth/register">Зареєструватись</a>
-</body></html>
+    <link rel="stylesheet" href="/auth.css">
+</head>
+<body>
+    <div class="auth-card">
+        <h2>Вхід</h2>
+        <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+        <form action="/auth/login" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Увійти</button>
+        </form>
+        <p style="margin-top: 15px; color: #bbb;">
+            Немає акаунту? <a href="/auth/register">Зареєструватись</a>
+        </p>
+    </div>
+</body>
+</html>

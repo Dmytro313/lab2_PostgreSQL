@@ -1,31 +1,28 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
     <title>Редагувати нотатку</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/auth.css">
 </head>
 <body>
-    <div class="card">
-        <h2>Редагувати нотатку</h2>
+    <div class="auth-card">
+        <h2 style="margin-top: 0;">Редагувати нотатку</h2>
         
         <form action="/notes/<%= note.id %>" method="POST">
             <input type="text" name="title" value="<%= note.title %>" required>
             
-            <textarea name="content" rows="5" required
-                style="width: 100%; background: #2d2d2d; color: white; border: 1px solid #3d3d3d; border-radius: 8px; padding: 12px; margin-bottom: 15px; outline: none;"><%= note.content %></textarea>
+            <textarea name="content" rows="5" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #333; border-radius: 6px; background-color: #2d2d2d; color: white; box-sizing: border-box; font-family: sans-serif; resize: vertical;"><%= note.content %></textarea>
+            
+            <input type="text" name="tags_string" value="<%= tags_string %>" placeholder="Теги через кому (напр: робота, ідея)">
             
             <button type="submit">Зберегти зміни</button>
         </form>
-        
-        <br>
 
-        <form action="/notes/<%= note.id %>/delete" method="POST" onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цю нотатку?');">
-            <button type="submit" style="background-color: #ff4d4d; color: white;">🗑 Видалити нотатку</button>
+        <form action="/notes/<%= note.id %>/delete" method="POST" style="margin-top: 10px; margin-bottom: 0;">
+            <button type="submit" style="background-color: #b30000;"> Видалити нотатку</button>
         </form>
-        
-        <br>
-        <a href="/notes" style="color: #888;">← Скасувати</a>
+
+        <a href="/notes" style="display: inline-block; margin-top: 15px;">← Скасувати</a>
     </div>
 </body>
 </html>
