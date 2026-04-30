@@ -2,43 +2,129 @@
 <html lang="uk">
 <head>
     <title>Мій профіль</title>
-    <link rel="stylesheet" href="/auth.css">
     <style>
-        .avatar-preview { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px auto; display: block; border: 3px solid #4da6ff; background-color: #2d2d2d; }
+        /* Основні стилі сторінки */
+        body { color: white; background-color: #121212; margin: 0; padding: 20px; min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: sans-serif; }
+        
+        /* Головна картка розширена для двох колонок */
+        .profile-card { width: 850px; max-width: 100%; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); box-sizing: border-box; text-align: center; }
+        
+        /* СІТКА ДЛЯ КОЛОНОК */
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 20px; text-align: left; }
+        .col { display: flex; flex-direction: column; gap: 20px; }
+        
+        /* Стилі окремих блоків (секцій) */
+        .profile-section { background: #2d2d2d; padding: 20px; border-radius: 8px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+        .profile-section h3 { margin-top: 0; color: #4da6ff; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px; font-size: 1.1em; }
+        
+        /* Елементи форм */
+        .avatar-preview { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 0 auto 15px auto; display: block; border: 3px solid #4da6ff; background-color: #2d2d2d; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #bbb; font-size: 0.9em; }
+        .input-group input { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #1e1e1e; color: white; box-sizing: border-box; }
+        
+        /* Кнопки */
+        .btn-submit { background-color: #4da6ff; color: #121212; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-top: auto; }
+        .btn-submit:hover { opacity: 0.9; }
+        .btn-danger { background-color: #b30000; color: white; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-top: auto; }
+        .btn-danger:hover { opacity: 0.9; }
+        
+        /* Сповіщення */
+        .alert-error { background: #ff4d4d; color: white; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+        .alert-success { background: #28a745; color: white; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+        .back-link { display: inline-block; padding: 10px 20px; background: #333; color: white; border-radius: 6px; text-decoration: none; font-weight: bold; transition: 0.2s; }
+        .back-link:hover { background: #444; }
     </style>
 </head>
-<body style="color: white;">
-    <div class="auth-card" style="text-align: center;">
-        <h2 style="margin-top: 0; color: white;">Мій профіль</h2>
+<body>
+    <div class="profile-card">
+        <h2 style="margin-top: 0; margin-bottom: 20px;">Керування профілем</h2>
 
-        <% if (error) { %>
-            <div style="background: #ff4d4d; color: white; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-                <%= error %>
-            </div>
+        <!-- Вивід помилок або успіху -->
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert-error"><%= error %></div>
+        <% } %>
+        <% if (typeof success !== 'undefined' && success) { %>
+            <div class="alert-success"><%= success %></div>
         <% } %>
 
-        <% if (user.avatar) { %>
-            <img src="<%= user.avatar %>" alt="Аватар" class="avatar-preview">
+        <div class="profile-grid">
             
-            <form action="/profile/avatar/delete" method="POST" style="margin-bottom: 20px;">
-                <button type="submit" style="background-color: #b30000; color: white; padding: 8px 15px; border-radius: 6px; border: none; cursor: pointer;">🗑 Видалити аватар</button>
-            </form>
-        <% } else { %>
-            <img src="https://via.placeholder.com/150/2d2d2d/ffffff?text=No+Avatar" alt="Немає аватара" class="avatar-preview">
-        <% } %>
+            <!-- ЛІВА КОЛОНКА (Аватар + Інфо) -->
+            <div class="col">
+                
+                <!-- АВАТАРКА -->
+                <div class="profile-section" style="text-align: center;">
+                    <% if (user.avatar) { %>
+                        <img src="<%= user.avatar %>" alt="Аватар" class="avatar-preview">
+                        <form action="/profile/avatar/delete" method="POST" style="margin-bottom: 10px;">
+                            <button type="submit" class="btn-danger" style="width: auto; padding: 5px 15px; font-size: 0.9em;">🗑 Видалити</button>
+                        </form>
+                    <% } else { %>
+                        <img src="https://via.placeholder.com/120/2d2d2d/ffffff?text=No+Avatar" alt="Немає аватара" class="avatar-preview">
+                    <% } %>
+                    <form action="/profile/avatar" method="POST" enctype="multipart/form-data" style="margin-top: auto;">
+                        <input type="file" name="avatar" accept=".jpg, .jpeg, .png, .webp" required style="width: 100%; margin-bottom: 10px; font-size: 0.9em;">
+                        <button type="submit" class="btn-submit" style="padding: 8px;">Завантажити</button>
+                    </form>
+                </div>
 
-        <div style="margin-bottom: 25px;">
-            <p style="margin: 5px 0;"><b>Ім'я:</b> <%= user.username %></p>
-            <p style="margin: 5px 0; color: #bbb;"><b>Email:</b> <%= user.email %></p>
+                <!-- ІНФОРМАЦІЯ ПРОФІЛЮ -->
+                <div class="profile-section">
+                    <h3>Зміна інформації</h3>
+                    <form action="/profile/info" method="POST" style="display: flex; flex-direction: column; height: 100%;">
+                        <div class="input-group">
+                            <label>Ім'я користувача</label>
+                            <input type="text" name="username" value="<%= user.username %>" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" name="email" value="<%= user.email || '' %>" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: #28a745; color: white;">Зберегти зміни</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ПРАВА КОЛОНКА (Пароль + Видалення) -->
+            <div class="col">
+                
+                <!-- ЗМІНА ПАРОЛЯ -->
+                <div class="profile-section">
+                    <h3>Зміна пароля</h3>
+                    <form action="/profile/password" method="POST" style="display: flex; flex-direction: column; height: 100%;">
+                        <div class="input-group">
+                            <label>Поточний пароль</label>
+                            <input type="password" name="currentPassword" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Новий пароль (мін. 8 символів)</label>
+                            <input type="password" name="newPassword" minlength="8" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Підтвердження нового пароля</label>
+                            <input type="password" name="confirmPassword" minlength="8" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="background-color: #ff9900;">Оновити пароль</button>
+                    </form>
+                </div>
+
+                <!-- ВИДАЛЕННЯ АКАУНТУ -->
+                <div class="profile-section" style="border: 1px solid #b30000;">
+                    <h3 style="color: #ff4d4d; border-color: #b30000;">Небезпечна зона</h3>
+                    <p style="color: #bbb; font-size: 0.85em; margin-bottom: 15px;">Увага! Видалення акаунту є незворотнім. Всі ваші нотатки будуть знищені.</p>
+                    <form action="/profile/delete" method="POST" style="display: flex; flex-direction: column; height: 100%; justify-content: flex-end;">
+                        <div class="input-group">
+                            <input type="password" name="password" placeholder="Введіть пароль для підтвердження" required style="border-color: #b30000;">
+                        </div>
+                        <button type="submit" class="btn-danger" onclick="return confirm('Ви впевнені, що хочете назавжди видалити акаунт?');">Видалити акаунт</button>
+                    </form>
+                </div>
+            </div>
+            
         </div>
 
-        <form action="/profile/avatar" method="POST" enctype="multipart/form-data" style="background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: left;">
-            <label style="display: block; margin-bottom: 10px; font-weight: bold; color: white;">Оновити аватар:</label>
-            <input type="file" name="avatar" accept=".jpg, .jpeg, .png, .webp" required style="width: 100%; margin-bottom: 15px; color: #fff;">
-            <button type="submit" style="background-color: #4da6ff; color: #121212; width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Завантажити</button>
-        </form>
-
-        <a href="/" style="display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none;">← Назад в меню</a>
+        <a href="/" class="back-link">← Повернутися в меню</a>
     </div>
 </body>
 </html>

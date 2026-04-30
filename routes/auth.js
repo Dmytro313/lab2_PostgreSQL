@@ -1,7 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const rateLimit = require("express-rate-limit");
 const pool = require("../db");
+
+// Rate limiting для входу: 10 спроб за 15 хвилин
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 хвилин
+  max: 10, // максимум 10 запитів
+  message: "Забагато спроб входу. Спробуйте через 15 хвилин.",
+  standardHeaders: true, // Повертаємо інформацію про rate limit в `RateLimit-*` headers
+  legacyHeaders: false, // Відключаємо `X-RateLimit-*` headers
+});
 
 // Сторінка реєстрації
 router.get("/register", (req, res) => {
@@ -52,8 +62,8 @@ router.get("/login", (req, res) => {
 });
 
 // Обробка входу
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+router.post("/login", loginLimiter, async (req, res) => {
+  const { email, password, rememberMe } = req.body;
 
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
@@ -66,7 +76,17 @@ router.post("/login", async (req, res) => {
 
     req.session.userId = user.id;
     req.session.username = user.username;
-    res.redirect("/");
+
+    // Якщо користувач вибрав "Запам'ятати мене", встановлюємо дольший термін сесії
+    if (rememberMe === 'on') {
+      req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 днів
+    } else {
+      req.session.cookie.expires = false; // Сесія буде знищена при закритті браузера
+    }
+
+    req.session.save(() => {
+      res.redirect("/");
+    });
   } catch (err) {
     console.error(err);
     res.render("login", { error: "Помилка сервера" });

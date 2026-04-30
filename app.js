@@ -14,6 +14,18 @@ const profileRoutes = require('./routes/profile');
 
 const app = express();
 
+const helmet = require("helmet");
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"], // Дозволяємо наші стилі
+            imgSrc: ["'self'", "data:", "https://via.placeholder.com", "blob:"], // Дозволяємо аватарки
+            scriptSrc: ["'self'", "'unsafe-inline'"]
+        },
+    },
+}));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -28,7 +40,6 @@ app.use(session({
     secret: process.env.SESSION_SECRET || "supersecret",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 днів
 }));
 
 // 4. ГЛОБАЛЬНІ ЗМІННІ ДЛЯ ШАБЛОНІВ

@@ -3,14 +3,23 @@
 <head>
     <title>Вхід</title>
     <link rel="stylesheet" href="/auth.css">
+    <style>
+        .remember-me { display: flex; align-items: center; margin: 12px 0; }
+        .remember-me input { margin-right: 8px; cursor: pointer; }
+        .remember-me label { color: #bbb; font-size: 0.9em; cursor: pointer; }
+    </style>
 </head>
 <body>
     <div class="auth-card">
         <h2>Вхід</h2>
-        <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+        <% if (error) { %><p style="color:#ff6b6b; background:#4a0a0a; padding:10px; border-radius:5px;"><%= error %></p><% } %>
         <form action="/auth/login" method="POST">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Пароль" required>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                <input type="checkbox" name="rememberMe" id="rememberMe" style="margin: 0; cursor: pointer; width: 16px; height: 16px;">
+                <label for="rememberMe" style="color: #bbb; cursor: pointer; margin: 0; font-size: 0.95em;">Запам'ятати мене</label>
+            </div>
             <button type="submit">Увійти</button>
         </form>
         <p style="margin-top: 15px; color: #bbb;">
